@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Your Window</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Open Your Window</h1>
+        <div>Environmental Monitor</div>
+    </header>
+
+    <div class="dashboard">
+
+    <div class="card">
+        <h3>Indoor Temperature</h3>
+        <div class="value" id="indoorTemp">-- °C</div>
+    </div>
+
+    <div class="card">
+        <h3>Indoor RH</h3>
+        <div class="value" id="indoorRH">-- %</div>
+    </div>
+
+    <div class="card">
+        <h3>Indoor AH</h3>
+        <div class="value" id="indoorAH">-- g/m³</div>
+    </div>
+
+    <div class="card">
+        <h3>Outdoor Temperature</h3>
+        <div class="value" id="outdoorTemp">-- °C</div>
+    </div>
+
+    <div class="card">
+        <h3>Outdoor RH</h3>
+        <div class="value" id="outdoorRH">-- %</div>
+    </div>
+
+    <div class="card">
+        <h3>Outdoor AH</h3>
+        <div class="value" id="outdoorAH">-- g/m³</div>
+    </div>
+
+    <div class="recommendation">
+        <h2>Window Recommendation</h2>
+        <span id="windowState">Calculating...</span>
+    </div>
+
+    </div>
+
+    <div class="chart-container">
+        <canvas id="humidityChart"></canvas>
+    </div>
+
+    <div class="settings">
+
+    <h2>Settings</h2>
+
+    <label>Max Relative Humidity (%)</label>
+    <input id="maxRH" type="number" value="60" min="0" max="100">
+
+    <label>Minimum Temperature (°C)</label>
+    <input id="minTemp" type="number" value="18" min="-50" max="50">
+
+    <label>Mode</label>
+    <select id="mode">
+        <option value="0">Humidity</option>
+        <option value="1">Temperature</option>
+        <option value="2">Both</option>
+    </select>
+
+    <label>Notification url</label>
+    <input id="notify" type="text" placeholder="ntfy.sh">
+
+    <button onclick="saveSettings()">Save Settings</button>
+
+    </div>
+
+    <footer>
+        Open Your Window • IoT Project • Raspberry Pi Environmental Monitor
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+

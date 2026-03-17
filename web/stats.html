@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jupi Monitor</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <link rel="stylesheet" href="style.css">  
+  <h1 style="font-family: Arial, Helvetica, sans-serif; text-align:center; font-weight: bold;">JuPi</h1>
+
+<script>
+    // var maxWidth = 100;
+    var barValue = 30;
+    var increment = 1;
+    
+    function animateBar()
+    {
+        var bar = document.getElementById("bar");
+
+        bar.style.width = 1 + '%';
+
+        setTimeout(animateBar, 2);
+    }
+
+    function bytesToGB(bytes) {
+        return (bytes / 1024 / 1024 / 1024).toFixed(2);
+    }
+
+    function formatUptime(seconds) {
+        const d = Math.floor(seconds / 86400);
+        seconds %= 86400;
+        const h = Math.floor(seconds / 3600);
+        seconds %= 3600;
+        const m = Math.floor(seconds / 60);
+        return `${d} d ${h} h ${m} min`;
+    }
+
+    async function loadMetrics() {
+        const r = await fetch('/stat/metrics');
+        const d = await r.json();
+
+        cpu_bar = document.getElementById("bar");
+        cpu_div = document.getElementById("cpu");
+        ram_div = document.getElementById("ram");
+        disk_div = document.getElementById("disk");
+        uptime_div = document.getElementById("uptime");
+        load = document.getElementById("percent");
+
+        pLoad = d.cpu_percent + '%';
+        load.innerHTML = `${d.cpu_percent.toFixed(1)} %`;
+
+        // Set color based on CPU load
+        if (d.cpu_percent < 50) { 
+            cpu_bar.className = "w3-container w3-round-xlarge w3-green";
+        } else if (d.cpu_percent < 80) {
+            cpu_bar.className = "w3-container w3-round-xlarge w3-yellow";
+        } else {
+            cpu_bar.className = "w3-container w3-round-xlarge w3-red";
+        }
+
+        cpu_bar.style.width = pLoad;
+        load.innerHTML = pLoad;
+        cpu_div.innerHTML = `
+            TEMP: ${d.cpu_temp} °C
+            `;
+
+        ram_div.innerHTML = `
+            TOTAL: ${bytesToGB(d.ram.total)} GB<br>
+            USING: ${bytesToGB(d.ram.used)} GB<br>
+            FREE: ${bytesToGB(d.ram.available)} GB
+            `;
+
+        disk_div.innerHTML = `
+            TOTAL: ${bytesToGB(d.disk.total)} GB<br>
+            USING: ${bytesToGB(d.disk.used)} GB<br>
+            FREE: ${bytesToGB(d.disk.free)} GB
+            `;
+        uptime_div.innerHTML = `Uptime: ${formatUptime(d.uptime)}`;
+    }
+
+    loadMetrics();
+</script>
+</head>
+
+<body onload="setInterval(loadMetrics, 1000);">
+    <table class="w3-table w3-bordered w3-border w3-striped w3-centered">
+    <tr class="table-header">
+        <th>CPU</th>
+        <th>RAM</th>
+        <th>Disk</th>
+        <th>Uptime</th>
+    </tr>
+    <tr> <!-- CPU Usage -->
+        <td>
+            <div class="w3-container" style="width: 100%;">
+                <div class="w3-grey w3-round-xlarge">
+                    <div id="bar" class="w3-container w3-round-xlarge w3-green" style="height: 1.5rem;"></div>
+                </div>
+                <p id="percent" style="margin-top: 0rem; margin-bottom: 0rem; text-align: center;">Loading...</p>
+            </div>
+            <div id="cpu" style="text-align: center;"></div>
+        </td>
+        <td> <!-- RAM Usage -->
+            <div id="ram" style="text-align: center;"></div>
+        </td>
+        <td> <!-- Disk Usage -->
+            <div id="disk" style="text-align: center;"></div>
+        </td>
+        <td> <!-- Uptime -->
+            <div id="uptime" style="text-align: center;"></div>
+        </td>
+    </tr>
+</table> 
+</body>
+</html>
